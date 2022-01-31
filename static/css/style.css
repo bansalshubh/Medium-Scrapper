@@ -1,0 +1,15 @@
+.first{
+    width: 50vw;
+}
+
+#tag{
+    border-radius: 30px;
+    padding-left: 25px;
+}
+
+#sub{
+    border-radius: 15px;
+}
+#sub:hover{
+    background-color: black;
+}

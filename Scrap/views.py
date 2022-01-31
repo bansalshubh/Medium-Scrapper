@@ -1,6 +1,7 @@
 from django.shortcuts import render,HttpResponse
 from bs4 import BeautifulSoup
 from selenium import webdriver
+from django import template
 from lxml import etree
 from selenium.webdriver.chrome.options import Options
 import requests
@@ -44,7 +45,7 @@ def get_Data(tag):
     title = soup.select("div>div>a>div>h2")
     for t in title:
         titles.append(t.text)
-    print(data.keys())
+    # print(data.keys())
     if(len(titles) > 0):
         data['titles'] = titles
 
@@ -52,7 +53,7 @@ def get_Data(tag):
     author = soup.select("span>div>a>p")
     for t in author:
         authors.append(t.text)
-    print(data.keys())
+    # print(data.keys())
     if(len(authors) > 0):
         data['authors'] = authors
 
@@ -60,7 +61,11 @@ def get_Data(tag):
     texty = soup.select("a>div>p")
     for t in texty:
         texts.append(t.text)
-    print(data.keys())
+    # print(data.keys())
+    if(len(texts) > 0 and len(titles) > 0):
+        leng = len(texts)-len(titles)
+        for i in range(leng):
+            texts.pop()
     if(len(texts) > 0):
         data['texts'] = texts
 
@@ -68,7 +73,7 @@ def get_Data(tag):
     minutes = soup.select("div>a>p>span")
     for t in minutes:
         mins_read.append(t.text)
-    print(data.keys())
+    # print(data.keys())
     if(len(mins_read) > 0):
         data['mins_read'] = mins_read
 
@@ -76,7 +81,7 @@ def get_Data(tag):
     times = soup.select("span>a>p")
     for t in times:
         times_ago.append(t.text)
-    print(data.keys())
+    # print(data.keys())
     if(len(times_ago) > 0):
         data['times_ago'] = times_ago
 
@@ -102,6 +107,10 @@ def get_Data(tag):
 
 # Create your views here.
 def index(request):
+    return render(request,'index.html')
+
+def scrapper(request):
+
     data = get_Data("cooking")
     if(data == None):
         return HttpResponse("404")
@@ -109,9 +118,16 @@ def index(request):
         data = get_Data("cooking")
         if(data == None):
             return HttpResponse("404")
-    # print(data.keys())
-    for datas in data:
-        print(data[datas])
-        print()
-    # print(data['related_tags'])
-    return HttpResponse("Home Page of Medium Scrapper")
+    results = []
+    for i in range(len(data['titles'])):
+        element = []
+        element.append(data['titles'][i])
+        element.append(data['texts'][i])
+        element.append(data['authors'][i])
+        element.append(data['mins_read'][i])
+        element.append(data['times_ago'][i])
+        element.append(data['links'][i])
+        results.append(element)
+    print(results)
+    params = {"data":results}
+    return render(request,"data.html",params)
