@@ -13,13 +13,17 @@
 
 <body>
     <div class="container my-3 first">
-        <h2 class="text-center">Medim Scrapper</h2>
+        <h2 class="text-center" style="color: white;    font-size: 3.5rem;">Medim Scrapper</h2>
+        <div style="display: flex;">
         <form action="/scrapper" method="post" class="d-flex my-4 mx-4">
             {% csrf_token %}
             <input class="form-control me-2" name="tag" id="tag" type="search" placeholder="Search" aria-label="Search"
                 value={{tag}}>
-            <button class="btn btn-outline-primary" id="sub" type="submit">Search</button>
+            <button class="btn btn-dark sub" type="submit">Search</button>
         </form>
+        <button class="btn btn-dark sub" style="height: 38px;
+        margin-top: 1.45vw;"><a href="/history">History</a></button>
+    </div>
         <script>
             function sleep(milliseconds) {
                 console.log("success");
@@ -32,17 +36,22 @@
             }
         </script>
         <div class="container">
+            <div class="mt-3" style="display: flex;">
+            <h5 class="mx-2" style="color: white;padding-top: 5px;">Related Tags :-</h5>
+            {% for t in related %}<<form action="/scrapper" method="post">{% csrf_token %}<button type="submit" style="background-color: white;color: black;padding-top: 7px;" value={{t}} name=tag class="btn btn-primary relate mx-2 btn-sm">{{t}}</button></form>{% endfor %}
+        </div>
             {% for i in results %}{% if i.takeSleep %}<p hidden></p>{% endif %}
-            <div class="card my-3">
-                <div class="card-header">
-                    {{i.2}}
+            <div class="card my-5 ">
+                <div class="card-header mycard d-flex justify-content-between">
+                    <p>{{i.2}}</p>
+                    <p>{{i.3}}</p>
                 </div>
-                <div class="card-body">
+                <div class="card-body mycardbody">
                     <h5 class="card-title">{{i.0}}</h5>
                     <p class="card-text my-3">{{i.1}}</p>
-                    <div clas="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between">
                         <p>{{i.4}}</p>
-                        <a href="{{i.5}}" class="btn btn-primary btn-sm">Read Article</a>
+                        <a style="padding-top: 10px;" href="{{i.5}}" class="btn btn-primary btn-sm">Read Article</a>
                     </div>
                 </div>
             </div>
@@ -59,7 +68,7 @@
 
 
 
-{% comment %} <script>
+<!-- {% comment %} <script>
     $(function () {
       {% for blog in urls.object_list %}
     console.log('{{
@@ -82,4 +91,4 @@
         $(this).fadeIn($(this).index() * offset);
                   });
               });
-  </script>  {% endcomment %}
+  </script>  {% endcomment %} -->

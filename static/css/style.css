@@ -2,20 +2,36 @@
 
 body{
     font-family: 'Baloo Bhaijaan 2', cursive;
+    background-color: rgb(56, 53, 53);
 }
 
-.first{
-    width: 50vw;
-}
+/* .first{
+    width: 80vw;
+} */
 
 #tag{
     border-radius: 30px;
     padding-left: 25px;
 }
 
-#sub{
+.sub{
     border-radius: 15px;
+    background-color: #545454;
 }
-#sub:hover{
+.sub:hover{
+    background-color: white;
+    color: black;
+    border: none;
+}
+.mycard{
+    background-color: rgb(75 73 73);
+    color: white;
+}
+.mycardbody{
+    background-color: rgb(59 55 55);
+    color: white;
+}
+.relate:hover{
     background-color: black;
+    color: white;
 }
