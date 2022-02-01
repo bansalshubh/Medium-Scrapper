@@ -82,7 +82,7 @@ def index(request):
     return render(request,'index.html')
 
 def history(request):
-    his = SearchHistory.objects.all()
+    his = SearchHistory.objects.all().order_by('-SearchId')
     hist = []
     for h in his:
         myhist = {
