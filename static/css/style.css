@@ -35,3 +35,7 @@ body{
     background-color: black;
     color: white;
 }
+.hist:hover{
+    background-color: white;
+    color: black;
+}

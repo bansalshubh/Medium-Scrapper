@@ -15,14 +15,14 @@
     <div class="container my-3 first">
         <h2 class="text-center" style="color: white;    font-size: 3.5rem;">Medim Scrapper</h2>
         <div style="display: flex;">
-        <form action="/scrapper" method="post" class="d-flex my-4 mx-4">
+        <form action="/scrapper" style="width: 85%;" method="post" class="d-flex my-4 mx-4">
             {% csrf_token %}
             <input class="form-control me-2" name="tag" id="tag" type="search" placeholder="Search" aria-label="Search"
                 value={{tag}}>
             <button class="btn btn-dark sub" type="submit">Search</button>
         </form>
-        <button class="btn btn-dark sub" style="height: 38px;
-        margin-top: 1.45vw;"><a href="/history">History</a></button>
+        <a class="btn btn-dark sub" style="height: 38px;margin-top: 1.45vw;" href="/history"
+        margin-top: 1.45vw;">History</a></a>
     </div>
         <script>
             function sleep(milliseconds) {

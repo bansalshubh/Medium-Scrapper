@@ -92,10 +92,12 @@ def history(request):
         }
         hist.append(myhist)
     params = {"results":hist}
-    print(hist)
+    # print(hist)
     return render(request,'History.html',params)
 
 def scrapper(request):
+    if(request.method == 'GET'):
+        return render(request,'index.html')
     tag = request.POST['tag']
     related_tags.clear()
     if(tag == ""):
@@ -111,7 +113,7 @@ def scrapper(request):
     start=time.time()
     data = get_Data(tag)
     if(data == None):
-        return HttpResponse("404")
+        return HttpResponse("Medium Website says 404 No Data Found")
     while(len(data) == 0):
         data = get_Data(tag)
         if(data == None):
