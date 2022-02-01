@@ -125,7 +125,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-STATIC_ROOT  =   os.path.join(PROJECT_ROOT, 'staticfiles')
+# STATIC_ROOT  =   os.path.join(PROJECT_ROOT, 'staticfiles')
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
