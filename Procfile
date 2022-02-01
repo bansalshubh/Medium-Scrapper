@@ -1,1 +1,0 @@
-web: gunicorn MediumScrapper.wsgi --log-file -
