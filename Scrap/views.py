@@ -10,96 +10,114 @@ import time
 path = "chromedriver"
 
 #Custom Functions Here
+
+def takeSleep(tak):
+    time.sleep(2)
+    return True
+
 def get_Data(tag):
     URL = "https://medium.com/tag/{}/latest".format(tag)
-    data = dict()
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--no-sandbox")
-    driver = webdriver.Chrome(executable_path=path,chrome_options=chrome_options)
-    driver.get(URL)
-    time.sleep(4)
-    page = driver.page_source
-    err = driver.find_elements_by_xpath('//*[@id="root"]/div/div[3]/div/div/div[2]/section[1]/div[1]/div/div[2]/div/div[2]/div[1]')
-    if(len(err) > 0 and err[0].get_attribute('textContent') == '404'):
-        return None
-    # for i in range(1,10):
-    #     related = driver.find_elements_by_xpath('//*[@id="root"]/div/div[4]/div/div/div[3]/div/div/div/div/div[2]/div/div[2]/div[{}]/a/div'.format(i))
-    #     if(len(related) > 0):
-    #         print(related[0].get_attribute('textContent'))
-    #         related_tags.append(related[0].get_attribute('textContent'))
-    # if(len(related_tags) > 0):
-    #     data['related_tags'] = related_tags    
-    driver.quit()
-    soup = BeautifulSoup(page, 'html.parser')
-    titles = []
-    related_tags = []
-    authors = []
-    texts = []
-    times_ago = []
-    mins_read = []
-    links = []
-    
-    # Getting the title
+    data = []
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--no-sandbox")
+    # driver = webdriver.Chrome(executable_path=path,chrome_options=chrome_options)
+    # driver.get(URL)
+    # time.sleep(3)
+    # page = driver.page_source
+    # err = driver.find_elements_by_xpath('//*[@id="root"]/div/div[3]/div/div/div[2]/section[1]/div[1]/div/div[2]/div/div[2]/div[1]')
+    # if(len(err) > 0 and err[0].get_attribute('textContent') == '404'):
+    #     return None  
+    # driver.quit()
+    result = requests.get(URL)
+    soup = BeautifulSoup(result.content, 'html.parser')
+    # titles = []
+    # related_tags = []
+    # authors = []
+    # texts = []
+    # times_ago = []
+    # mins_read = []
+    # links = []
     title = soup.select("div>div>a>div>h2")
-    for t in title:
-        titles.append(t.text)
-    # print(data.keys())
-    if(len(titles) > 0):
-        data['titles'] = titles
-
-    # Getting the author
     author = soup.select("span>div>a>p")
-    for t in author:
-        authors.append(t.text)
-    # print(data.keys())
-    if(len(authors) > 0):
-        data['authors'] = authors
-
-    # Getting the text
     texty = soup.select("a>div>p")
-    for t in texty:
-        texts.append(t.text)
-    # print(data.keys())
-    if(len(texts) > 0 and len(titles) > 0):
-        leng = len(texts)-len(titles)
-        for i in range(leng):
-            texts.pop()
-    if(len(texts) > 0):
-        data['texts'] = texts
-
-    # Getting the mins_read
     minutes = soup.select("div>a>p>span")
-    for t in minutes:
-        mins_read.append(t.text)
-    # print(data.keys())
-    if(len(mins_read) > 0):
-        data['mins_read'] = mins_read
-
-    # Getting the mins_read
     times = soup.select("span>a>p")
-    for t in times:
-        times_ago.append(t.text)
-    # print(data.keys())
-    if(len(times_ago) > 0):
-        data['times_ago'] = times_ago
+    link = soup.find_all('a',{"aria-label":"Post Preview Title"})
+    if(len(texty) > 0 and len(title) > 0):
+        leng = len(texty)-len(title)
+        for i in range(leng):
+            texty.pop()
+
+    for t,tex,a,times,mins,links in zip(title,texty,author,times,minutes,link):
+        detail = []
+        detail.append(t.text)
+        detail.append(tex.text)
+        detail.append(a.text)
+        detail.append(times.text)
+        detail.append(mins.text)
+        detail.append("https://medium.com"+links['href'])
+        data.append(detail)
+
+
+
+
+
+    
+    # # Getting the title
+    # for t in title:
+    #     titles.append(t.text)
+    # # print(data.keys();
+    # if(len(titles) > 0):
+    #     data['titles'] = titles
+
+    # # Getting the author
+    # for t in author:
+    #     authors.append(t.text)
+    # # print(data.keys())
+    # if(len(authors) > 0):
+    #     data['authors'] = authors
+
+    # # Getting the text
+    # for t in texty:
+    #     texts.append(t.text)
+    # # print(data.keys())
+    # if(len(texts) > 0 and len(titles) > 0):
+    #     leng = len(texts)-len(titles)
+    #     for i in range(leng):
+    #         texts.pop()
+    # if(len(texts) > 0):
+    #     data['texts'] = texts
+
+    # # Getting the mins_read
+    # for t in minutes:
+    #     mins_read.append(t.text)
+    # # print(data.keys())
+    # if(len(mins_read) > 0):
+    #     data['mins_read'] = mins_read
+
+    # # Getting the mins_read
+    # for t in times:
+    #     times_ago.append(t.text)
+    # # print(data.keys())
+    # if(len(times_ago) > 0):
+    #     data['times_ago'] = times_ago
 
     # Getting the article Links
-    link = soup.find_all('a',{"aria-label":"Post Preview Title"})
-    for t in link:
-        links.append("https://medium.com"+t['href'])
-    if(len(links) > 0):
-        data['links'] = links
+    # for t in link:
+    #     links.append("https://medium.com"+t['href'])
+    # if(len(links) > 0):
+    #     data['links'] = links
 
     #Get the Related Topics
-    dom = etree.HTML(str(soup))
-    for i in range(1,10):
-        l = dom.xpath('//*[@id="root"]/div/div[3]/div/div/div[3]/div/div/div/div[1]/div[2]/div[3]/div/div[2]/div[{}]/a/div'.format(i))
-        if(len(l) > 0):
-            related_tags.append(l[0].text)
-    if(len(related_tags) > 0):
-        data['related_tags'] = related_tags
+    # dom = etree.HTML(str(soup))
+    # for i in range(1,10):
+    #     l = dom.xpath('//*[@id="root"]/div/div[3]/div/div/div[3]/div/div/div/div[1]/div[2]/div[3]/div/div[2]/div[{}]/a/div'.format(i))
+    #     if(len(l) > 0):
+    #         related_tags.append(l[0].text)
+    # if(len(related_tags) > 0):
+    #     data['related_tags'] = related_tags
 
     return data
 
@@ -110,24 +128,22 @@ def index(request):
     return render(request,'index.html')
 
 def scrapper(request):
-
-    data = get_Data("cooking")
+    tag = request.POST['tag']
+    if(tag == ""):
+        return HttpResponse("Invalid Tag")
+    tag = str(tag.replace(" ","-"))
+    start=time.time()
+    data = get_Data(tag)
     if(data == None):
         return HttpResponse("404")
-    while('titles' not in data):
-        data = get_Data("cooking")
+    
+    while(len(data) == 0):
+        data = get_Data(tag)
         if(data == None):
             return HttpResponse("404")
-    results = []
-    for i in range(len(data['titles'])):
-        element = []
-        element.append(data['titles'][i])
-        element.append(data['texts'][i])
-        element.append(data['authors'][i])
-        element.append(data['mins_read'][i])
-        element.append(data['times_ago'][i])
-        element.append(data['links'][i])
-        results.append(element)
-    print(results)
-    params = {"data":results}
+    end = int(time.time()-start)
+    print(end)
+    
+    print(data)
+    params = {"results" : data,"tag":tag,"sleep":takeSleep}
     return render(request,"data.html",params)
