@@ -11,12 +11,8 @@ from dateutil.relativedelta import relativedelta
 import time
 path = "chromedriver"
 related_tags = []
+
 #Custom Functions Here
-
-def takeSleep(tak):
-    time.sleep(2)
-    return True
-
 def get_Data(tag):
     URL = "https://medium.com/tag/{}/latest".format(tag)
     data = []
@@ -55,15 +51,6 @@ def get_Data(tag):
         detail.append("https://medium.com"+links['href'])
         data.append(detail)
 
-    # Get the Related Topics
-    # dom = etree.HTML(str(soup))
-    # for i in range(1,10):
-    #     l = dom.xpath('//*[@id="root"]/div/div[3]/div/div/div[3]/div/div/div/div[1]/div[2]/div[3]/div/div[2]/div[{}]/a/div'.format(i))
-    #     if(len(l) > 0):
-    #         related_tags.append(l[0].text)
-    # print(related_tags)
-    # if(len(related_tags) > 0):
-    #     data.append(related_tags)
     if(len(related_tags) == 0):
         for i in range(1,10):
             l = soup.select("#root > div > div.l.c > div > div > div.dk.dl.c.dm.h.k.j.i.bl.dn.do.dp > div > div > div > div.l.gz > div.eh.l > div.ie.gi.l > div > div.o.gk.iu > div:nth-child({}) > a > div".format(i))
@@ -74,13 +61,13 @@ def get_Data(tag):
 
     return data
 
-#//*[@id="root"]/div/div[3]/div/div/div[3]/div/div/div/div[1]/div[2]/div[3]/div/div[2]/div[1]/a/div
-
 
 # Create your views here.
+
 def index(request):
     return render(request,'index.html')
 
+# Route for getting history from database
 def history(request):
     his = SearchHistory.objects.all()
     hist = []
@@ -95,6 +82,7 @@ def history(request):
     print(hist)
     return render(request,'History.html',params)
 
+# Route for fetches data from medium website 
 def scrapper(request):
     tag = request.POST['tag']
     related_tags.clear()
