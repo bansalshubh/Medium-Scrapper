@@ -15,32 +15,23 @@
     <div class="container my-3 first">
         <h2 class="text-center" style="color: white;    font-size: 3.5rem;">Medium Scrapper</h2>
         <div style="display: flex;">
-        <form action="/scrapper" style="width: 85%;" method="post" class="d-flex my-4 mx-2">
-            {% csrf_token %}
-            <input class="form-control me-2" name="tag" id="tag" type="search" placeholder="Search" aria-label="Search"
-                value={{tag}}>
-            <button class="btn btn-dark sub" type="submit">Search</button>
-        </form>
-        <a class="btn btn-dark sub my-4" style="height: 38px;" href="/history"
-        margin-top: 1.45vw;">History</a></a>
-    </div>
-        <script>
-            function sleep(milliseconds) {
-                console.log("success");
-                var start = new Date().getTime();
-                for (var i = 0; i < 1e7; i++) {
-                    if ((new Date().getTime() - start) > milliseconds) {
-                        break;
-                    }
-                }
-            }
-        </script>
-        <div class="container">
-            <div class="mt-3" style="display: flex;">
-            <h5 class="mx-2" style="color: white;padding-top: 5px;">Related Tags :-</h5>
-            {% for t in related %}<form action="/scrapper" method="post">{% csrf_token %}<button type="submit" style="background-color: white;color: black;padding-top: 7px;" value={{t}} name=tag class="btn btn-primary relate mx-2 btn-sm">{{t}}</button></form>{% endfor %}
+            <form action="/scrapper" style="width: 85%;" method="post" class="d-flex my-4 mx-2">
+                {% csrf_token %}
+                <input class="form-control me-2" name="tag" id="tag" type="search" placeholder="Search"
+                    aria-label="Search" value={{tag}}>
+                <button class="btn btn-dark sub" type="submit">Search</button>
+            </form>
+            <a class="btn btn-dark sub my-4" style="height: 38px;" href="/history" margin-top: 1.45vw;">History</a></a>
         </div>
-            {% for i in results %}{% if i.takeSleep %}<p hidden></p>{% endif %}
+
+        <div class="container">
+            <div class="mt-3" style="display: flex;flex-wrap: wrap;">
+                <h5 class="mx-2" style="color: white;padding-top: 5px;">Related Tags :-</h5>
+                {% for t in related %}<form action="/scrapper" method="post">{% csrf_token %}<button type="submit"
+                        style="background-color: white;color: black;padding-top: 7px;" value={{t}} name=tag
+                        class="btn btn-primary relate mx-2 btn-sm">{{t}}</button></form>{% endfor %}
+            </div>
+            {% for i in results %}
             <div class="card my-5 ">
                 <div class="card-header mycard d-flex justify-content-between">
                     <p>{{i.2}}</p>
@@ -56,6 +47,7 @@
                 </div>
             </div>
             {% endfor %}
+
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
@@ -68,27 +60,44 @@
 
 
 
-<!-- {% comment %} <script>
+<!-- <script>
     $(function () {
-      {% for blog in urls.object_list %}
-    console.log('{{
-      blog.name
-    }}')
-    $(".display").append('<div class="card text-center mt-3 trStyleSummary"> <div class="card-header">' + '{{
-      blog.name
-    }}' + '</div><div class="card-body"> <h5 class="card-title">' + '{{ blog.title }}' + '</h5> <a href="' + '{{ 
-  blog.link
-   }}' +  '"class="btn btn-outline-secondary" target="_blank">Read on Medium</a><form class="mt-2" method="POST" action="' + "{% url 'detail' %}" + '">' + '{% csrf_token %}' + '<input type="hidden" name="writer" class="form-control" placeholder="Your Name" value="' + '{{
-  blog.name
-  }}' + '" required><input type="hidden" name="title" class="form-control" placeholder="Your Name" value="' + '{{blog.title}}' + '" required><input type="hidden" name="link" class="form-control" placeholder="Your Name" value="' + '{{
-  blog.link
-  }}' + '" required><center><button class="btn btn-outline-secondary" type="submit">Detail</button></center> </form></div><div class="card-footer text-muted">' + '{{
-            blog.date
-          }}' + '</div></div>');
+      {% for i in results %}
+    $(".display").append('<div class="card my-5 "><div class="card-header mycard d-flex justify-content-between"><p>'+{{i.2}}+'</p><p>'+{{i.3}}+'</p></div><div class="card-body mycardbody"><h5 class="card-title">'+{{i.0}}+'</h5><p class="card-text my-3">'+{{i.1}}+'</p><div class="d-flex justify-content-between"><p>'+{{i.4}}+'</p><a style="padding-top: 10px;" href="'+{{i.5}}+'" class="btn btn-primary btn-sm">Read Article</a></div></div></div>');
       {% endfor %}
       var offset = 1500;
       $(".trStyleSummary").each(function () {
         $(this).fadeIn($(this).index() * offset);
                   });
               });
-  </script>  {% endcomment %} -->
+  </script> -->
+
+<!-- {% for i in results %}
+            <div class="card my-5 ">
+                <div class="card-header mycard d-flex justify-content-between">
+                    <p>{{i.2}}</p>
+                    <p>{{i.3}}</p>
+                </div>
+                <div class="card-body mycardbody">
+                    <h5 class="card-title">{{i.0}}</h5>
+                    <p class="card-text my-3">{{i.1}}</p>
+                    <div class="d-flex justify-content-between">
+                        <p>{{i.4}}</p>
+                        <a style="padding-top: 10px;" href="{{i.5}}" class="btn btn-primary btn-sm">Read Article</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %} -->
+
+            <!-- <div class="display"></div>
+            <script>
+                $(function () {
+                    {% for i in results %}
+                    $(".display").append('<div class="card my-5 "><div class="card-header mycard d-flex justify-content-between"><p>' + '{{ i.2}}' + '</p><p>' + '{{ i.3}}'+'</p></div><div class="card-body mycardbody"><h5 class="card-title">' + '{{ i.0}}'+'</h5><p class="card-text my-3">' + '{{ i.1}}'+'</p><div class="d-flex justify-content-between"><p>' + '{{ i.4}}'+'</p><a style="padding-top: 10px;" href="' + '{{ i.5}}'+'" class="btn btn-primary btn-sm">Read Article</a></div></div></div>');
+                {% endfor %}
+                var offset = 1500;
+                $(".trStyleSummary").each(function () {
+                    $(this).fadeIn($(this).index() * offset);
+                });
+                          });
+            </script> -->

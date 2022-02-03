@@ -1,4 +1,4 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render,HttpResponse,redirect
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from django import template
@@ -95,6 +95,11 @@ def history(request):
     # print(hist)
     return render(request,'History.html',params)
 
+def deletehistory(request,id):
+    record = SearchHistory.objects.get(SearchId = id)
+    record.delete()
+    return redirect("/history")
+
 def scrapper(request):
     if(request.method == 'GET'):
         return render(request,'index.html')
@@ -105,9 +110,10 @@ def scrapper(request):
     tag = tag.strip(" ")
     tag = tag.lower()
     tag = str(tag.replace(" ","-"))
+    print(tag)
     one_year_from_now = datetime.datetime.now() + relativedelta(years=0)
     date_formated = one_year_from_now.strftime("%Y-%m-%d")
-    print(date_formated)
+    # print(date_formated)
     myhistory = SearchHistory.objects.create(SearchTagName=tag,SearchDate=date_formated)
     myhistory.save()
     start=time.time()
