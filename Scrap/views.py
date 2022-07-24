@@ -2,7 +2,7 @@ from django.shortcuts import render,HttpResponse,redirect
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from django import template
-from lxml import etree
+from lxml import etree,html
 from selenium.webdriver.chrome.options import Options
 from .models import SearchHistory
 import requests
@@ -15,7 +15,7 @@ related_tags = []
 
 def takeSleep(tak):
     time.sleep(2)
-    return True
+    # return True
 
 def get_Data(tag):
     URL = "https://medium.com/tag/{}/latest".format(tag)
@@ -25,18 +25,23 @@ def get_Data(tag):
 
     #passing into soup to get html page content
     soup = BeautifulSoup(result.content, 'html.parser')
+    # print(soup)
 
     #finding page exists or not
-    err = soup.select("#root > div > div.l.c > div > div > div.dd.de.df.dg.dh.di.l.dj > section.ev.ew.dq.dl.l.ex.ey.ez.fa.fb.fc.fd.fe.ff.fg.fh.fi.fj.fk.fl > div.l.h.g > div > div:nth-child(2) > div > div.fy.b > div.fz.ga.gb.gc.gd.ge.gf.gg.gh.gi.gj.gk.fx.b.gl.gm.gn")
-    if(len(err) > 0 and err[0].text == "404"):
+    err = soup.select("section>div>div>div>div>div")
+    # err = soup.xpath("//*[@id='root']/div/div[3]/div/div/main/section[1]/div[1]/div/div[2]/div/div[2]/div[1]")
+    if(len(err) > 0 and err[0].text == "PAGE NOT FOUND"):
         return None
 
     #finding the details
     title = soup.select("div>div>a>div>h2")
     author = soup.select("span>div>a>p")
+    del author[1::2]
     texty = soup.select("a>div>p")
     minutes = soup.select("div>a>p>span")
-    times = soup.select("span>a>p")
+    del minutes[0::2]
+    times = soup.select("span>div>a>p")
+    del times[0::2]
     link = soup.find_all('a',{"aria-label":"Post Preview Title"})
     if(len(texty) > 0 and len(title) > 0):
         leng = len(texty)-len(title)
@@ -54,27 +59,15 @@ def get_Data(tag):
         detail.append(mins.text)
         detail.append("https://medium.com"+links['href'])
         data.append(detail)
-
-    # Get the Related Topics
-    # dom = etree.HTML(str(soup))
-    # for i in range(1,10):
-    #     l = dom.xpath('//*[@id="root"]/div/div[3]/div/div/div[3]/div/div/div/div[1]/div[2]/div[3]/div/div[2]/div[{}]/a/div'.format(i))
-    #     if(len(l) > 0):
-    #         related_tags.append(l[0].text)
-    # print(related_tags)
-    # if(len(related_tags) > 0):
-    #     data.append(related_tags)
+        # print(data)
     if(len(related_tags) == 0):
         for i in range(1,10):
-            l = soup.select("#root > div > div.l.c > div > div > div.dk.dl.c.dm.h.k.j.i.bl.dn.do.dp > div > div > div > div.l.gz > div.eh.l > div.ie.gi.l > div > div.o.gk.iu > div:nth-child({}) > a > div".format(i))
+            l = soup.select("#root > div > div.l.c > div > div > div.ep.ci.c.eq.h.k.j.i.cv.er.es.et > div > div > div > div.l.hv > div.fk.l > div.ih.hd.l > div > div.o.hg.in > div:nth-child({}) > a > div".format(i))
             if(len(l) > 0):
                 s = l[0].text
                 s = s.replace(" ","-")
                 related_tags.append(s)
-
     return data
-
-#//*[@id="root"]/div/div[3]/div/div/div[3]/div/div/div/div[1]/div[2]/div[3]/div/div[2]/div[1]/a/div
 
 
 # Create your views here.
