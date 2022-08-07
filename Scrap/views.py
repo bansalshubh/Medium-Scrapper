@@ -62,7 +62,7 @@ def get_Data(tag):
         # print(data)
     if(len(related_tags) == 0):
         for i in range(1,10):
-            l = soup.select("#root > div > div.l.c > div > div > div.ep.ci.c.eq.h.k.j.i.cv.er.es.et > div > div > div > div.l.hv > div.fk.l > div.ih.hd.l > div > div.o.hg.in > div:nth-child({}) > a > div".format(i))
+            l = soup.select("#root > div > div.l.c > div > div > div.ep.ci.c.eq.h.k.j.i.cv.er.es.et > div > div > div > div.l.jl > div.fi.l > div.jv.ix.l > div > div.o.iz.fn > div:nth-child({}) > a > div".format(i))
             if(len(l) > 0):
                 s = l[0].text
                 s = s.replace(" ","-")
